@@ -53,10 +53,10 @@
 > 其中关键代码在于bind()函数，该函数发送广播  
 > ![alt text](./img/代码追踪16.png "PushService")  
 >  
-> 广播发给谁具体由a()函数中Internal.createBdussInent()  
+> 广播发给谁具体由a()函数中Internal.createBdussInent()或者PushConstants.createMethodIntent()  
 > ![alt text](./img/代码追踪17.png "PushService")  
 >  
-> 其中createBdussInent()函数又调用了n.g()函数，其中n.g()函数中通过调用n.d()函数返回intent，发现此刻intent的action设置为com.baidu.android.pushservice.action.METHOD，回到应用的manifest，注册过RegistrationReceiver的intent-filter中果然有com.baidu.android.pushservice.action.METHOD  
+> 其中createBdussInent()函数又调用了n.g()函数，其中n.g()函数中通过调用n.d()函数返回intent，或者createMethodIntent()函数直接调用n.d()函数返回intent，发现此刻intent的action设置为com.baidu.android.pushservice.action.METHOD，回到应用的manifest，注册过RegistrationReceiver的intent-filter中果然有com.baidu.android.pushservice.action.METHOD  
 > ![alt text](./img/代码追踪18.png "PushService")  
 >  
 > 进入RegistrationReceiver类，然后立刻定位到onReceive()函数，代码混淆的执行流有点乱，但是还是找到一个函数调用b.a(paramContext, paramIntent)  
@@ -65,7 +65,17 @@
 > 更进b.a(paramContext, paramIntent)，其中代码启动了PushService服务  
 > ![alt text](./img/代码追踪20.png "PushService")  
 >  
-> 定位到PushService的onCreate，onStartCommand，onDestroy生命周期函数，
+> 定位到PushService的onCreate，onStartCommand，onDestroy生命周期函数  
+> onCreate()创建服务，在initPushSDK()中判断是否应该启动本服务，如果判断不应该启动本服务则调用a()函数  
+> ![alt text](./img/代码追踪21.png "PushService")  
+>  
+> initPushSDK()  
+> ![alt text](./img/代码追踪22.png "PushService")  
+>  
+> initPushSDK()中调用a()函数通过优先级配置项，决定本服务是否启动  
+> ![alt text](./img/代码追踪23.png "PushService")  
+> ![alt text](./img/代码追踪24.png "PushService")  
+>  
 
 #### 现有方案[选型][3]
 
