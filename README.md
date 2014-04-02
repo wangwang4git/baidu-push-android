@@ -76,6 +76,32 @@
 > ![alt text](./img/代码追踪23.png "PushService")  
 > ![alt text](./img/代码追踪24.png "PushService")  
 >  
+> onStartCommand()中调用handleOnStart()函数进行心跳包，推送信息接收  
+> ![alt text](./img/代码追踪25.png "PushService")  
+>  
+> handleOnStart()的while循环中掉调用h()函数  
+> ![alt text](./img/代码追踪26.png "PushService")  
+> 
+> 在h()函数中调用mPushConnection.d()函数发送心跳包  
+> ![alt text](./img/代码追踪27.png "PushService")  
+> 
+> 具体发送操作在c.d()函数中，其中c为abstract class a的实例，找到继承a的类message中的c，定位到d方法  
+> ![alt text](./img/代码追踪28.png "PushService")  
+> 
+> 发现心跳包的数据对象为b对象，其中数据放在byte[]中  
+> ![alt text](./img/代码追踪29.png "PushService")  
+> 
+> 定位到构造arrayOfByte请求包的函数private byte[] a(short paramShort, byte[] paramArrayOfByte)  
+> ![alt text](./img/代码追踪30.png "PushService")  
+> 
+> 其中具体构造过程参见d类，具体构造心跳包数据的函数如下，百度心跳包数据体的大小有三种 2/4/8  
+> ![alt text](./img/代码追踪31.png "PushService")  
+>  
+> 回到c.d()函数，具体发送操作在a(localb)函数中，其中a(local)函数在abstract class a中实现,其中具体发送操作在com.baidu.android.pushservice.f.a()中  
+> ![alt text](./img/代码追踪32.png "PushService")  
+> ![alt text](./img/代码追踪33.png "PushService")  
+>  
+
 
 #### 现有方案[选型][3]
 
